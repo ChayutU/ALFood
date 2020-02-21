@@ -1,0 +1,5 @@
+query CategoryQuery($branchId: String!) {
+    items(branchId: $branchId ) {
+        image
+    }
+}

@@ -1,0 +1,8 @@
+query authUser($username: String!, $password: String!){
+    authUser(username:$username , password:$password){
+        name
+        password
+        username
+        companyId
+    }
+}

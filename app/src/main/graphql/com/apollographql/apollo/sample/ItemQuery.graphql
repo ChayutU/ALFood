@@ -1,0 +1,8 @@
+query ItemQuery($branchId: String!) {
+  items(branchId: $branchId ) {
+    id
+    name
+    price
+    image
+  }
+}

@@ -1,0 +1,12 @@
+mutation CreateTransMutant($trans : TransactionInput!){
+    createTransaction	(newTransaction: $trans){
+        transactionId
+        totalAmount
+        received
+        changed
+        branchId
+        details{
+            itemId
+        }
+    }
+}
