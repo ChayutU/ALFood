@@ -3,6 +3,8 @@ package com.e.alfood.Model;
 
 public class ProductImage {
 
+    int pos, totalCash, productQuantity;
+    String productPrice;
     private Integer id;
     private Integer imageId;
     private String productName;
@@ -12,13 +14,11 @@ public class ProductImage {
     private Integer stocks;
     private Integer productImage;
     private String description;
-    int pos,totalCash,productQuantity;
-    String productPrice;
 
     public ProductImage() {
     }
 
-    public ProductImage(String productName, String productPrice, int productQuantity, Integer productImage ) {
+    public ProductImage(String productName, String productPrice, int productQuantity, Integer productImage) {
         this.productImage = productImage;
         this.productQuantity = productQuantity;
         this.productPrice = productPrice;

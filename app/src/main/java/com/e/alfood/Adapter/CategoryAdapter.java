@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollographql.apollo.sample.CategoryQuery;
-import com.apollographql.apollo.sample.ItemQuery;
 import com.e.alfood.ItemsActivity;
 import com.e.alfood.MainActivity;
 import com.e.alfood.R;
@@ -70,12 +69,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     static class ViewHolder extends RecyclerView.ViewHolder {
 
 
-        private Context context;
         ImageView iconThumbnail;
+        private Context context;
 
         ViewHolder(View itemView, Context context) {
             super(itemView);
-            iconThumbnail = (ImageView) itemView.findViewById(R.id.iconThumbnail);
+            iconThumbnail = itemView.findViewById(R.id.iconThumbnail);
             this.context = context;
         }
 

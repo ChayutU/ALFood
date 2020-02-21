@@ -31,12 +31,11 @@ import static com.e.alfood.BuildConfig.SELF_ORDERING_URL;
 public class ItemsActivity extends AppCompatActivity {
     private static final String TAG = "ItemsActivity";
     public static int cart_count = 0;
-    private ActivityItemsBinding itemsBinding;
     public static ArrayList<ProductModel> arrayList = new ArrayList<>();
-    public static ArrayList<ItemQuery.Item> arrayQueryList = new ArrayList<ItemQuery.Item>();
+    public static ArrayList<ItemQuery.Item> arrayQueryList = new ArrayList<>();
     ItemsAdapter itemsAdapter;
-
     String branId = "69501393-b1e2-45f2-aac0-9def4a4b86c8";
+    private ActivityItemsBinding itemsBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,50 +45,39 @@ public class ItemsActivity extends AppCompatActivity {
 
         getApolloClient();
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvItems);
+        RecyclerView recyclerView = findViewById(R.id.rvItems);
 
-        itemsAdapter = new ItemsAdapter(arrayQueryList,this,this);
+        itemsAdapter = new ItemsAdapter(arrayQueryList, this, this);
         recyclerView.setAdapter(itemsAdapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(this,3));
-
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
 
         getItemQuery(branId);
 
-        itemsBinding.txtBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ItemsActivity.this,MainActivity.class));
-                finish();
-            }
+        itemsBinding.txtBack.setOnClickListener(v -> {
+            startActivity(new Intent(ItemsActivity.this, MainActivity.class));
+            finish();
         });
-        itemsBinding.imgBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ItemsActivity.this,MainActivity.class));
-                finish();
-            }
+        itemsBinding.imgBack.setOnClickListener(v -> {
+            startActivity(new Intent(ItemsActivity.this, MainActivity.class));
+            finish();
         });
 
-        itemsBinding.imgCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(ItemsActivity.this,CartActivity.class));
-                finish();
-            }
+        itemsBinding.imgCart.setOnClickListener(v -> {
+            startActivity(new Intent(ItemsActivity.this, CartActivity.class));
+            finish();
         });
 
     }
 
-    private ApolloClient getApolloClient(){
+    private ApolloClient getApolloClient() {
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
 
-        ApolloClient apolloClient = ApolloClient.builder()
+        return ApolloClient.builder()
                 .serverUrl(SELF_ORDERING_URL)
                 .okHttpClient(okHttpClient)
                 .build();
-        return apolloClient;
     }
 
 
@@ -101,13 +89,13 @@ public class ItemsActivity extends AppCompatActivity {
             public void onResponse(@NotNull Response<ItemQuery.Data> response) {
                 assert response.data() != null;
                 //Log.d(TAG, "onResponse: " + response.data().items().size() + " Loaded");
-                Log.d(TAG, "Response: " + response.data().items().size()+" Loaded");
+                Log.d(TAG, "Response: " + response.data().items().size() + " Loaded");
 
                 ItemsActivity.this.runOnUiThread(() -> {
                     //tvError.setVisibility(View.GONE);
                     //refreshContainer.setRefreshing(false);
 
-                    if (response.data().items().size()>0){
+                    if (response.data().items().size() > 0) {
                         itemsAdapter.setItems(response.data().items());
                         itemsBinding.rvItems.setAdapter(itemsAdapter);
                         itemsAdapter.notifyDataSetChanged();
@@ -121,7 +109,7 @@ public class ItemsActivity extends AppCompatActivity {
             public void onFailure(@NotNull ApolloException e) {
                 Log.d(TAG, "Exception " + e.getMessage(), e);
 
-                ItemsActivity.this.runOnUiThread(()->{
+                ItemsActivity.this.runOnUiThread(() -> {
 //                    binding.refreshContainer.setRefreshing(false);
 //                    binding.tvError.setVisibility(View.VISIBLE);
 //                    binding.tvError.setText(String.format("Error Occurred %s",

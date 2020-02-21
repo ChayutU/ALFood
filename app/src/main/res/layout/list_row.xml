@@ -4,15 +4,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="2.5dp"
-    android:paddingBottom="2.5dp" >
+    android:paddingBottom="2.5dp">
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         android:background="#fff"
         android:orientation="horizontal"
-        android:padding="10dp"
-        android:layout_marginBottom="5dp" >
+        android:padding="10dp">
 
         <!-- ListRow Left sied Thumbnail image -->
 
@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_marginRight="7dip"
-            android:padding="2dip" >
+            android:padding="2dip">
 
             <ImageView
                 android:id="@+id/list_image_cart"
@@ -32,7 +32,6 @@
         </LinearLayout>
 
         <!-- Title Of Song -->
-
 
 
         <TextView
@@ -50,9 +49,9 @@
             android:id="@+id/cart_plus_minus_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/product_cart_code"
-            android:orientation="horizontal" >
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/product_cart_price"
@@ -67,15 +66,15 @@
                 android:textSize="12dip"
                 android:textStyle="bold" />
 
-           <!-- <TextView
-                android:id="@+id/product_cart_quantity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:paddingRight="25dip"
-                android:text="quantiy"
-                android:textColor="#343434"
-                android:textSize="12dip" />-->
+            <!-- <TextView
+                 android:id="@+id/product_cart_quantity"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_gravity="center_horizontal|center_vertical"
+                 android:paddingRight="25dip"
+                 android:text="quantiy"
+                 android:textColor="#343434"
+                 android:textSize="12dip" />-->
 
             <ImageView
                 android:id="@+id/cart_decrement"
@@ -99,6 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_plus" />
+
             <ImageView
                 android:id="@+id/delete_item_from_cart"
                 android:layout_width="wrap_content"

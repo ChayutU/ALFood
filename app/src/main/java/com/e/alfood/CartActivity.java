@@ -1,13 +1,11 @@
 package com.e.alfood;
 
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import com.e.alfood.Adapter.CartAdapter;
 import com.e.alfood.Model.ProductImage;
@@ -44,7 +41,7 @@ public class CartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
         context = this;
         temparraylist = new ArrayList<>();
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         proceedToBook = findViewById(R.id.proceed_to_book);
         grandTotal = findViewById(R.id.grand_total_cart);
         setSupportActionBar(mToolbar);
@@ -98,7 +95,7 @@ public class CartActivity extends AppCompatActivity {
         for (int i = 0; i < temparraylist.size(); i++) {
             grandTotalplus = grandTotalplus + temparraylist.get(i).getTotalCash();
         }
-        grandTotal.setText("Rs. " + String.valueOf(grandTotalplus));
+        grandTotal.setText("Rs. " + grandTotalplus);
         cartRecyclerView = findViewById(R.id.recycler_view_cart);
         cartAdapter = new CartAdapter(temparraylist, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);

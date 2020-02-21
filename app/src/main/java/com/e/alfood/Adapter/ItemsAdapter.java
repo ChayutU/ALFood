@@ -30,15 +30,14 @@ import static com.e.alfood.ItemsActivity.arrayList;
 
 public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ItemViewHolder> {
 
+    public static ArrayList<ProductImage> cartModels = new ArrayList<ProductImage>();
+    public static ProductImage cartModel;
     private List<ItemQuery.Item> items = Collections.emptyList();
     private Context context;
     private CallBackUs mCallBackus;
     private HomeCallBack homeCallBack;
 
-    public static ArrayList<ProductImage> cartModels = new ArrayList<ProductImage>();
-    public static ProductImage cartModel;
-
-    public ItemsAdapter(ArrayList<ItemQuery.Item> arrayList, ItemsActivity itemsActivity, Context context){
+    public ItemsAdapter(ArrayList<ItemQuery.Item> arrayList, ItemsActivity itemsActivity, Context context) {
         this.context = context;
     }
 
@@ -51,7 +50,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ItemViewHold
 
     @NonNull
     @Override
-    public  ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         final View itemView = layoutInflater.inflate(R.layout.items, parent, false);
 
@@ -110,7 +109,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ItemViewHold
                 updateQtyDialog.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context, String.valueOf(cartCounter[0]) + "", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, cartCounter[0] + "", Toast.LENGTH_SHORT).show();
 
                         cartModel = new ProductImage();
                         cartModel.setProductQuantity((cartCounter[0]));
@@ -145,6 +144,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ItemViewHold
     public interface CallBackUs {
         void addCartItemView();
     }
+
     // this interface creates for call the invalidateoptionmenu() for refresh the menu item
     public interface HomeCallBack {
         void updateCartCount(Context context);
@@ -153,27 +153,26 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ItemViewHold
     static class ItemViewHolder extends RecyclerView.ViewHolder {
 
 
-        private Context context;
         TextView txtTitle;
         TextView txtPrice;
         ImageView iconThumbnail;
+        private Context context;
 
         ItemViewHolder(View itemView, Context context) {
             super(itemView);
-            txtTitle = (TextView) itemView.findViewById(R.id.txtTitle);
-            txtPrice = (TextView) itemView.findViewById(R.id.tvPrice);
-            iconThumbnail = (ImageView)itemView.findViewById(R.id.iconThumbnail);
+            txtTitle = itemView.findViewById(R.id.txtTitle);
+            txtPrice = itemView.findViewById(R.id.tvPrice);
+            iconThumbnail = itemView.findViewById(R.id.iconThumbnail);
             this.context = context;
         }
 
         void setItem(final ItemQuery.Item item) {
             txtTitle.setText(item.name());
             int y = (int) item.price();
-            txtPrice.setText(y +" บาท");
+            txtPrice.setText(y + " บาท");
 
             String imageUrl = item.image();
             Picasso.get().load(imageUrl).into(iconThumbnail);
-
 
 
         }

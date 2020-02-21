@@ -2,11 +2,11 @@ package com.e.alfood.Model;
 
 public class ProductModel {
 
-        public String productName;
-        public String price;
-        public String quantity;
-        public int imagePath;
-        //    public int price;
+    public String productName;
+    public String price;
+    public String quantity;
+    public int imagePath;
+    //    public int price;
 
 
     public ProductModel(String productName, String price, String quantity, int imagePath) {
