@@ -1,6 +1,7 @@
 package com.e.alfood.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollographql.apollo.sample.CategoryQuery;
 import com.apollographql.apollo.sample.ItemQuery;
+import com.e.alfood.ItemsActivity;
 import com.e.alfood.MainActivity;
 import com.e.alfood.R;
 import com.squareup.picasso.Picasso;
@@ -51,6 +53,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(@NonNull CategoryAdapter.ViewHolder holder, int position) {
         final CategoryQuery.Item item = this.items.get(position);
         holder.setItem(item);
+
+        holder.iconThumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(context, ItemsActivity.class));
+            }
+        });
     }
 
     @Override

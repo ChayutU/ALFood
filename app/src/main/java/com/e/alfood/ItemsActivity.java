@@ -16,6 +16,7 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.sample.ItemQuery;
 import com.e.alfood.Adapter.ItemsAdapter;
+import com.e.alfood.Model.ProductModel;
 import com.e.alfood.databinding.ActivityItemsBinding;
 
 import org.jetbrains.annotations.NotNull;
@@ -29,10 +30,10 @@ import static com.e.alfood.BuildConfig.SELF_ORDERING_URL;
 
 public class ItemsActivity extends AppCompatActivity {
     private static final String TAG = "ItemsActivity";
-
+    public static int cart_count = 0;
     private ActivityItemsBinding itemsBinding;
-
-    ArrayList<ItemQuery.Item> arrayList = new ArrayList<ItemQuery.Item>();
+    public static ArrayList<ProductModel> arrayList = new ArrayList<>();
+    public static ArrayList<ItemQuery.Item> arrayQueryList = new ArrayList<ItemQuery.Item>();
     ItemsAdapter itemsAdapter;
 
     String branId = "69501393-b1e2-45f2-aac0-9def4a4b86c8";
@@ -47,7 +48,7 @@ public class ItemsActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvItems);
 
-        itemsAdapter = new ItemsAdapter(arrayList,this,this);
+        itemsAdapter = new ItemsAdapter(arrayQueryList,this,this);
         recyclerView.setAdapter(itemsAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(this,3));
 

@@ -1,88 +1,186 @@
 package com.e.alfood.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.e.alfood.Model.Item;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.e.alfood.Model.ProductImage;
 import com.e.alfood.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CartAdapter extends ArrayAdapter<Item> {
-    private List<Item> list;
-    private Context context;
+import static com.e.alfood.CartActivity.grandTotal;
+import static com.e.alfood.CartActivity.grandTotalplus;
+import static com.e.alfood.CartActivity.temparraylist;
 
-    TextView currentFoodName,
-            currentCost,
-            quantityText;
+public class CartAdapter extends RecyclerView.Adapter<CartAdapter.ViewHolder> {
+    ArrayList<ProductImage> cartModelArrayList;
+    Context context;
 
-    ImageView decrement,increment,removeMeal ;
-
-    public CartAdapter(Context context, List<Item> myOrders) {
-        super(context, 0, myOrders);
-        this.list = myOrders;
-        this.context = context;
+    public CartAdapter(ArrayList<ProductImage> cartModelArrayList, Context context) {
+        this.context = (Context) context;
+        this.cartModelArrayList = cartModelArrayList;
     }
 
 
-    public View getView(final int position, View convertView, ViewGroup parent){
-        View listItemView = convertView;
-        if(listItemView == null){
-            listItemView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.list_row,parent,false
-            );
+    @Override
+    public CartAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_row, parent, false);
+        return new CartAdapter.ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(final CartAdapter.ViewHolder holder, final int position) {
+        // holder.productCartImage.setImageResource(R.drawable.burger);
+        holder.productCartPrice.setText(String.valueOf(cartModelArrayList.get(position).getTotalCash()));
+        holder.productCartCode.setText(cartModelArrayList.get(position).getProductName());
+        holder.productCartQuantity.setText(String.valueOf(cartModelArrayList.get(position).getProductQuantity()));
+
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.bag);
+        requestOptions.error(R.drawable.bag);
+        Log.d("imageurl", String.valueOf(cartModelArrayList.get(position).getProductImage()));
+        Glide.with(context)
+                .setDefaultRequestOptions(requestOptions)
+                .load(cartModelArrayList.get(position).getProductImage()).into(holder.productCartImage);
+
+        //for remove single item in cart and update the total value and list
+        holder.deleteItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (cartModelArrayList.size() == 1) {
+                    cartModelArrayList.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, cartModelArrayList.size());
+                    grandTotalplus = 0;
+                    grandTotal.setText(String.valueOf(grandTotalplus));
+                }
+
+                if (cartModelArrayList.size() > 0) {
+                    cartModelArrayList.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, cartModelArrayList.size());
+                    grandTotalplus = 0;
+                    for (int i = 0; i < temparraylist.size(); i++) {
+                        grandTotalplus = grandTotalplus + temparraylist.get(i).getTotalCash();
+                    }
+
+                    Log.d("totalcashthegun", String.valueOf(grandTotalplus));
+                    grandTotal.setText(String.valueOf(grandTotalplus));
+
+                } else {
+                    Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        // increment quantity and update quamtity and total cash
+        holder.cartIncrement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //total_cash=0;\
+                Log.d("posthegun", String.valueOf(cartModelArrayList.get(position).getStocks()));
+
+                grandTotalplus = 0;
+                holder.cartDecrement.setEnabled(true);
+
+                int cartUpdateCounter = (cartModelArrayList.get(position).getProductQuantity());
+                Log.d("counterthegun", String.valueOf(cartModelArrayList.get(position).getProductQuantity()));
+
+                holder.cartIncrement.setEnabled(true);
+                cartUpdateCounter += 1;
+
+                cartModelArrayList.get(position).setProductQuantity((cartUpdateCounter));
+                int cash = (Integer.parseInt(cartModelArrayList.get(position).getProductPrice()) * (cartModelArrayList.get(position).getProductQuantity()));
+
+                holder.productCartQuantity.setText(String.valueOf(cartModelArrayList.get(position).getProductQuantity()));
+
+                cartModelArrayList.get(position).setTotalCash(cash);
+                holder.productCartPrice.setText(String.valueOf(cash));
+
+
+                for (int i = 0; i < temparraylist.size(); i++) {
+                    grandTotalplus = grandTotalplus + temparraylist.get(i).getTotalCash();
+                }
+                Log.d("totalcashthegun", String.valueOf(grandTotalplus));
+                grandTotal.setText(String.valueOf(grandTotalplus));
+
+            }
+
+        });
+
+        // decrement quantity and update quamtity and total cash
+        holder.cartDecrement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //total_cash=0;
+                grandTotalplus = 0;
+                holder.cartIncrement.setEnabled(true);
+
+                int cartUpdateCounter = (cartModelArrayList.get(position).getProductQuantity());
+                Log.d("counterthegun", String.valueOf(cartModelArrayList.get(position).getProductQuantity()));
+
+
+                if (cartUpdateCounter == 1) {
+                    holder.cartDecrement.setEnabled(false);
+                    Toast.makeText(context, "quantity can't be zero", Toast.LENGTH_SHORT).show();
+                } else {
+                    holder.cartDecrement.setEnabled(true);
+                    cartUpdateCounter -= 1;
+                    cartModelArrayList.get(position).setProductQuantity((cartUpdateCounter));
+                    holder.productCartQuantity.setText(String.valueOf(cartModelArrayList.get(position).getProductQuantity()));
+                    int cash = (Integer.parseInt(cartModelArrayList.get(position).getProductPrice()) * (cartModelArrayList.get(position).getProductQuantity()));
+
+                    cartModelArrayList.get(position).setTotalCash(cash);
+                    holder.productCartPrice.setText(String.valueOf(cash));
+                    for (int i = 0; i < temparraylist.size(); i++) {
+                        grandTotalplus = grandTotalplus + temparraylist.get(i).getTotalCash();
+                    }
+
+                    Log.d("totalcashthegun", String.valueOf(grandTotalplus));
+                    grandTotal.setText(String.valueOf(grandTotalplus));
+
+                }
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        Log.d("sizecart", String.valueOf(cartModelArrayList.size()));
+        return cartModelArrayList.size();
+    }
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView productCartImage, cartIncrement, cartDecrement, deleteItem;
+        TextView productCartCode, productCartPrice, productCartQuantity;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            productCartImage = itemView.findViewById(R.id.list_image_cart);
+            deleteItem = itemView.findViewById(R.id.delete_item_from_cart);
+            productCartCode = itemView.findViewById(R.id.product_cart_code);
+            productCartPrice = itemView.findViewById(R.id.product_cart_price);
+            productCartQuantity = itemView.findViewById(R.id.cart_product_quantity_tv);
+            cartDecrement = itemView.findViewById(R.id.cart_decrement);
+            cartIncrement = itemView.findViewById(R.id.cart_increment);
+
+
         }
-
-        final Item currentFood = getItem(position);
-
-        currentFoodName = (TextView)listItemView.findViewById(R.id.product_cart_code);
-        currentCost = (TextView)listItemView.findViewById(R.id.product_cart_price);
-        quantityText = (TextView)listItemView.findViewById(R.id.cart_product_quantity_tv);
-        decrement = (ImageView)listItemView.findViewById(R.id.cart_decrement);
-        increment = (ImageView)listItemView.findViewById(R.id.cart_increment);
-        removeMeal = (ImageView)listItemView.findViewById(R.id.delete_item_from_cart);
-
-
-        //Set the text of the meal, amount and quantity
-        currentFoodName.setText(currentFood.Name);
-        currentCost.setText(" "+ (currentFood.Amount * currentFood.Quantity));
-        quantityText.setText("x "+ currentFood.Quantity);
-
-        //OnClick listeners for all the buttons on the ListView Item
-        increment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                currentFood.addToQuantity();
-                quantityText.setText("x "+ currentFood.Quantity);
-                currentCost.setText(" "+ (currentFood.Amount * currentFood.Quantity));
-                notifyDataSetChanged();
-            }
-        });
-
-        decrement.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                currentFood.removeFromQuantity();
-                quantityText.setText("x "+currentFood.Quantity);
-                currentCost.setText(" "+ (currentFood.Amount * currentFood.Quantity));
-                notifyDataSetChanged();
-            }
-        });
-
-        removeMeal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                list.remove(position);
-                notifyDataSetChanged();
-            }
-        });
-
-        return listItemView;
     }
+
 
 }

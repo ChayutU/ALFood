@@ -59,14 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
         getCategoryQuery(branId);
 
-
-        mainBinding.rvCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,ItemsActivity.class));
-                finish();
-            }
-        });
     }
 
     private ApolloClient getApolloClient(){
