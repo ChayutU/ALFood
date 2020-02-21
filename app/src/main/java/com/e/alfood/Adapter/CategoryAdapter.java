@@ -1,73 +1,81 @@
 package com.e.alfood.Adapter;
 
-import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.apollographql.apollo.sample.CategoryQuery;
+import com.apollographql.apollo.sample.ItemQuery;
+import com.e.alfood.MainActivity;
 import com.e.alfood.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class CategoryAdapter extends ArrayAdapter<CategoryQuery.Item> {
-    Context context;
-    int layoutResourceId;
-    private List<CategoryQuery.Item> menuList;
-    private ArrayList<CategoryQuery.Item> items = new ArrayList<CategoryQuery.Item>();
+import static android.content.ContentValues.TAG;
 
+public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
-    public CategoryAdapter(Context context, int layoutResourceId,
-                                 ArrayList<CategoryQuery.Item> items) {
-        super(context, layoutResourceId, items);
-        this.layoutResourceId = layoutResourceId;
+    private List<CategoryQuery.Item> items = Collections.emptyList();
+    private Context context;
+
+    public CategoryAdapter(ArrayList<CategoryQuery.Item> arrayList, MainActivity mainActivity, Context context) {
         this.context = context;
+    }
+
+    public void setItems(List<CategoryQuery.Item> items) {
         this.items = items;
+        this.notifyDataSetChanged();
+        Log.d(TAG, "Updated posts in adapter: " + items.size());
+    }
+
+
+    @NonNull
+    @Override
+    public CategoryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        final View itemView = layoutInflater.inflate(R.layout.category, parent, false);
+
+        return new CategoryAdapter.ViewHolder(itemView, context);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View row = convertView;
-        RecordHolder holder = null;
-
-        if (row == null) {
-            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            row = inflater.inflate(R.layout.category, parent, false);
-
-            holder = new RecordHolder();
-            holder.iconThumbnail = row.findViewById(R.id.iconThumbnail);
-            row.setTag(holder);
-        } else {
-            holder = (RecordHolder) row.getTag();
-        }
-
-
-        CategoryQuery.Item item = items.get(position);
-
-        String imageUrl = item.image();
-        Picasso.get().load(imageUrl).into(holder.iconThumbnail);
-
-        /*
-        String strImage = item.image().replaceFirst("^data:image/[^;]*;base64,?","");
-
-        byte[] decodedString = Base64.decode(strImage, Base64.DEFAULT);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        holder.iconThumbnail.setImageBitmap(decodedByte);
-         */
-
-
-
-        return row;
-
+    public void onBindViewHolder(@NonNull CategoryAdapter.ViewHolder holder, int position) {
+        final CategoryQuery.Item item = this.items.get(position);
+        holder.setItem(item);
     }
 
-    static class RecordHolder {
+    @Override
+    public int getItemCount() {
+        return items.size();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+
+
+        private Context context;
         ImageView iconThumbnail;
 
+        ViewHolder(View itemView, Context context) {
+            super(itemView);
+            iconThumbnail = (ImageView) itemView.findViewById(R.id.iconThumbnail);
+            this.context = context;
+        }
+
+        void setItem(final CategoryQuery.Item item) {
+
+            String imageUrl = item.image();
+            Picasso.get().load(imageUrl).into(iconThumbnail);
+
+
+        }
     }
 }

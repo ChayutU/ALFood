@@ -7,6 +7,8 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
@@ -30,7 +32,7 @@ public class ItemsActivity extends AppCompatActivity {
 
     private ActivityItemsBinding itemsBinding;
 
-    ArrayList<ItemQuery.Item> gridArray = new ArrayList<ItemQuery.Item>();
+    ArrayList<ItemQuery.Item> arrayList = new ArrayList<ItemQuery.Item>();
     ItemsAdapter itemsAdapter;
 
     String branId = "69501393-b1e2-45f2-aac0-9def4a4b86c8";
@@ -42,7 +44,16 @@ public class ItemsActivity extends AppCompatActivity {
         hideNavigationBar();
 
         getApolloClient();
-        setToolbar();
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvItems);
+
+        itemsAdapter = new ItemsAdapter(arrayList,this,this);
+        recyclerView.setAdapter(itemsAdapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(this,3));
+
+
+
+        getItemQuery(branId);
 
         itemsBinding.txtBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,21 +91,6 @@ public class ItemsActivity extends AppCompatActivity {
         return apolloClient;
     }
 
-    private void setToolbar() {
-
-        //getSupportActionBar().setTitle("Point of Sale");
-        //getSupportActionBar().setSubtitle("POS");
-
-
-        itemsAdapter = new ItemsAdapter(this,R.layout.activity_items,gridArray);
-        itemsBinding.gvItems.setAdapter(itemsAdapter);
-
-        getItemQuery(branId);
-        //binding.refreshContainer.setOnRefreshListener(() -> getItemQuery(branId));
-
-
-    }
-
 
     public void getItemQuery(String branchId) {
         getApolloClient().query(ItemQuery.builder()
@@ -111,8 +107,8 @@ public class ItemsActivity extends AppCompatActivity {
                     //refreshContainer.setRefreshing(false);
 
                     if (response.data().items().size()>0){
-                        itemsAdapter.addAll(response.data().items());
-                        itemsBinding.gvItems.setAdapter(itemsAdapter);
+                        itemsAdapter.setItems(response.data().items());
+                        itemsBinding.rvItems.setAdapter(itemsAdapter);
                         itemsAdapter.notifyDataSetChanged();
                     }
                 });

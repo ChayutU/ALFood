@@ -57,8 +57,8 @@
         app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintTop_toTopOf="@+id/textView2" />
 
-    <GridView
-        android:id="@+id/gvCategory"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCategory"
         android:layout_width="483dp"
         android:layout_height="693dp"
         android:layout_marginTop="8dp"

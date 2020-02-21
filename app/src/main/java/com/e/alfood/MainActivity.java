@@ -8,6 +8,8 @@ import android.widget.AdapterView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
@@ -15,6 +17,7 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.sample.CategoryQuery;
 import com.e.alfood.Adapter.CategoryAdapter;
+import com.e.alfood.Adapter.ItemsAdapter;
 import com.e.alfood.databinding.ActivityMainBinding;
 
 import org.jetbrains.annotations.NotNull;
@@ -44,11 +47,22 @@ public class MainActivity extends AppCompatActivity {
         hideNavigationBar();
 
         getApolloClient();
-        setToolbar();
 
-        mainBinding.gvCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rvCategory);
+
+        categoryAdapter = new CategoryAdapter(gridArray,this,this);
+        recyclerView.setAdapter(categoryAdapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(this,3));
+
+
+
+        getCategoryQuery(branId);
+
+
+        mainBinding.rvCategory.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this,ItemsActivity.class));
                 finish();
             }
@@ -66,21 +80,6 @@ public class MainActivity extends AppCompatActivity {
         return apolloClient;
     }
 
-    private void setToolbar() {
-
-        //getSupportActionBar().setTitle("Self Ordering");
-        //getSupportActionBar().setSubtitle("Tung Luang Gas");
-
-
-        categoryAdapter = new CategoryAdapter(this,R.layout.activity_main,gridArray);
-        mainBinding.gvCategory.setAdapter(categoryAdapter);
-
-        getCategoryQuery(branId);
-        //binding.refreshContainer.setOnRefreshListener(() -> getItemQuery(branId));
-
-
-    }
-
 
     public void getCategoryQuery(String branchId) {
         getApolloClient().query(CategoryQuery.builder()
@@ -96,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
                     //refreshContainer.setRefreshing(false);
 
                     if (response.data().items().size()>0){
-                        categoryAdapter.addAll(response.data().items());
-                        mainBinding.gvCategory.setAdapter(categoryAdapter);
+                        categoryAdapter.setItems(response.data().items());
+                        mainBinding.rvCategory.setAdapter(categoryAdapter);
                         categoryAdapter.notifyDataSetChanged();
                     }
                 });
